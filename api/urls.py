@@ -1,11 +1,17 @@
 from rest_framework import routers
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.contrib import admin 
+from django.urls import path 
+from django.conf import settings
+
 from .views import (
     ClienteViewSet, UbicacionViewSet, FacturaViewSet,
     ProductoViewSet, DetalleViewSet, CustomTokenObtainPairView,
     LogoutView, RegisterView, 
     ReporteFacturaAPIView, ResumenFacturasAPIView
 )
+
 
 router = routers.DefaultRouter()
 
@@ -24,3 +30,5 @@ urlpatterns = [
     path('api/reporte-facturas/', ReporteFacturaAPIView.as_view(), name='reporte_factura'),
     path('api/resumen-facturas/', ResumenFacturasAPIView.as_view(), name='resumen_facturas')
 ]
+
+if settings.DEBUG: urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

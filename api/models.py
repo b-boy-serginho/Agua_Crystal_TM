@@ -7,7 +7,9 @@ class Cliente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     telefono = models.IntegerField()
     direccion = models.CharField(max_length=100)
-    foto = models.CharField(max_length=300, null=True, blank=True)
+    # foto = models.CharField(max_length=300, null=True, blank=True)
+    # foto = models.ImageField(upload_to='clientes/')
+    foto = models.ImageField(upload_to='clientes/', null=True, blank=True)
 
     def __str__(self):
         return self.user.username

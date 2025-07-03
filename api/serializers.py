@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Cliente, Ubicacion, Factura, Producto, Detalle
 
 class ClienteSerializer(serializers.ModelSerializer):
+    foto = serializers.ImageField(required=False)
     class Meta:
         model = Cliente
         fields = [

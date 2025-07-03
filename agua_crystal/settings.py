@@ -27,6 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.100.7', '192.168.66.160', 'localhost', '127.0.0.1']
 
+# URL base para acceder a los archivos multimedia desde el navegador. 
+MEDIA_URL = '/imagenes/' # Ruta absoluta en el sistema de archivos donde se guardarán los archivos subidos. 
+MEDIA_ROOT = BASE_DIR / 'imagenes'
 
 # Application definition
 
