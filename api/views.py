@@ -85,19 +85,29 @@ class RegisterView(APIView):
         password = data.get("password")
         telefono = data.get("telefono")
         direccion = data.get("direccion")
-        foto = data.get("foto")
+        foto = request.FILES.get("foto")  # importante: obtener la imagen correctamente
+
         if User.objects.filter(username=username).exists():
             return Response({"error": "nombre de usuario ya existe"}, status=status.HTTP_400_BAD_REQUEST)
+
         user = User.objects.create_user(username=username, email=email, password=password)
-        cliente = Cliente.objects.create(user=user, telefono=telefono, direccion=direccion, foto=foto)
+
+        cliente = Cliente.objects.create(
+            user=user,
+            telefono=telefono,
+            direccion=direccion,
+            foto=foto
+        )
+
         return Response({
             "id": user.id,
             "username": user.username,
             "email": user.email,
             "telefono": cliente.telefono,
             "direccion": cliente.direccion,
-            "foto": cliente.foto,
+            "foto": cliente.foto.url if cliente.foto else None
         }, status=status.HTTP_201_CREATED)
+
 
 class ReporteFacturaAPIView(APIView):
     def get(self, request):

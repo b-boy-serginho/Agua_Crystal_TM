@@ -42,14 +42,16 @@ class FacturaSerializer(serializers.ModelSerializer):
             'cliente',
             'importe_total',
             'importe_descuento',
-            'fecha'
+            'fecha',
+            'bloqueada',
         ]
-        read_only_fields = ['importe_total', 'fecha']
+        read_only_fields = ['importe_total', 'fecha', 'bloqueada',]
 
 class DetalleSerializer(serializers.ModelSerializer):
+    factura = serializers.PrimaryKeyRelatedField(queryset=Factura.objects.filter(bloqueada=False))
+    producto = serializers.PrimaryKeyRelatedField(queryset=Producto.objects.all())
+    # factura = serializers.PrimaryKeyRelatedField(queryset=Factura.objects.all())
     class Meta:
-        factura = serializers.PrimaryKeyRelatedField(queryset=Factura.objects.all())
-        producto = serializers.PrimaryKeyRelatedField(queryset=Producto.objects.all())
         model = Detalle
         # fields = '__all__'
         fields = [
