@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 User.objects.all()
-from django.utils import timezone  # para la fecha actual
+from django.utils import timezone # para la fecha actual
+from django.utils.timezone import localtime
 
 class Cliente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -31,11 +32,21 @@ class Producto(models.Model):
     def __str__(self):
         return self.nombre
     
+def obtener_fecha_actual():
+    return localtime().date()
+    # return timezone.now().date()
+
+def obtener_hora_actual():
+    return localtime().time()
+    # return timezone.now().time()
+
 class Factura(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     importe_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     importe_descuento = models.DecimalField(max_digits=10, decimal_places=2)
-    fecha = models.DateTimeField(default=timezone.now)  # aquí se guarda la fecha actual
+    # fecha = models.DateTimeField(default=timezone.now)  # aquí se guarda la fecha actual
+    fecha = models.DateField(default=obtener_fecha_actual)  # ✅ solo la fecha
+    hora = models.TimeField(default=obtener_hora_actual)    # ✅ solo la hora
     bloqueada = models.BooleanField(default=False)  # <--- NUEVO CAMPO
 
     def actualizar_total(self):

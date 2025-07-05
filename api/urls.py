@@ -9,7 +9,8 @@ from .views import (
     ClienteViewSet, UbicacionViewSet, FacturaViewSet,
     ProductoViewSet, DetalleViewSet, CustomTokenObtainPairView,
     LogoutView, RegisterView, 
-    ReporteFacturaAPIView, ResumenFacturasAPIView
+    ReporteFacturaAPIView, ResumenFacturasAPIView,
+    EnviarMensajeWhatsApp
 )
 
 router = routers.DefaultRouter()
@@ -26,7 +27,8 @@ urlpatterns = [
     path('api/logout/', LogoutView.as_view(), name='logout'),
     path('api/register/', RegisterView.as_view(), name='register'),
     path('api/reporte-facturas/', ReporteFacturaAPIView.as_view(), name='reporte_factura'),
-    path('api/resumen-facturas/', ResumenFacturasAPIView.as_view(), name='resumen_facturas')
+    path('api/resumen-facturas/', ResumenFacturasAPIView.as_view(), name='resumen_facturas'),
+    path('api/whatsapp/send/', EnviarMensajeWhatsApp.as_view(), name='enviar_whatsapp'),
 ]
 
 if settings.DEBUG: urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

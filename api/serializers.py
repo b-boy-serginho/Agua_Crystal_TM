@@ -45,9 +45,10 @@ class FacturaSerializer(serializers.ModelSerializer):
             'importe_total',
             'importe_descuento',
             'fecha',
+            'hora',
             'bloqueada',
         ]
-        read_only_fields = ['importe_total', 'fecha', 'bloqueada',]
+        read_only_fields = ['importe_total', 'fecha', 'bloqueada', 'hora']
 
 class DetalleSerializer(serializers.ModelSerializer):
     factura = serializers.PrimaryKeyRelatedField(queryset=Factura.objects.filter(bloqueada=False))

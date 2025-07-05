@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import requests
 from rest_framework import viewsets
 from .models import Cliente, Ubicacion, Factura, Producto, Detalle, User
 from .serializers import ClienteSerializer, UbicacionSerializer, FacturaSerializer, ProductoSerializer, DetalleSerializer
@@ -113,17 +114,19 @@ class ReporteFacturaAPIView(APIView):
     def get(self, request):
         with connection.cursor() as cursor:
             cursor.execute("""
-                SELECT auth_user.username, 
-                       api_factura.id as numero_factura,
-                       api_producto.nombre,
-                       api_detalle.cantidad,
-                       api_detalle.precio,
-                       api_detalle.subtotal	
-                FROM auth_user, api_factura, api_producto, api_detalle
-                WHERE auth_user.id = api_factura.cliente_id
-                  AND api_factura.id = api_detalle.factura_id
-                  AND api_producto.id = api_detalle.producto_id
-            """)
+                select auth_user.username, 
+                        api_factura.id as numero_factura,
+                        api_producto.nombre,
+                        api_detalle.cantidad,
+                        api_detalle.precio,
+                        api_detalle.subtotal
+                from auth_user, api_cliente, api_factura, api_producto, api_detalle
+                where auth_user.id=api_cliente.user_id and
+                        api_cliente.id = api_factura.cliente_id and
+                        api_factura.id=api_detalle.factura_id and
+                        api_factura.id= api_detalle.factura_id and
+                        api_producto.id = api_detalle.producto_id
+                                """)
             resultado = cursor.fetchall()
         
         # Convertir resultado a JSON-like
@@ -145,12 +148,13 @@ class ResumenFacturasAPIView(APIView):
     def get(self, request):
         with connection.cursor() as cursor:
             cursor.execute("""
-                SELECT auth_user.username, 
-                       api_factura.importe_total, 
-                       api_factura.importe_descuento, 
-                       api_factura.fecha
-                FROM auth_user, api_factura
-                WHERE auth_user.id = api_factura.cliente_id
+                select auth_user.username, 
+                        api_factura.importe_total, 
+                        api_factura.importe_descuento,
+                        api_factura.fecha, api_factura.hora	
+                from auth_user, api_cliente, api_factura
+                where api_cliente.user_id=auth_user.id 
+                and api_cliente.id=api_factura.cliente_id
             """)
             resultados = cursor.fetchall()
 
@@ -165,6 +169,35 @@ class ResumenFacturasAPIView(APIView):
         ]
 
         return Response(data)
+    
+class EnviarMensajeWhatsApp(APIView):
+    def post(self, request):
+        numero_destino = request.data.get("numero")  # formato internacional, ej: 59171234567
+        mensaje = request.data.get("mensaje")
+
+        token = "TU_TOKEN_DE_ACCESO"
+        telefono_id = "TU_PHONE_NUMBER_ID"
+
+        url = f"https://graph.facebook.com/v19.0/{telefono_id}/messages"
+
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        }
+
+        data = {
+            "messaging_product": "whatsapp",
+            "to": numero_destino,
+            "type": "text",
+            "text": {"body": mensaje},
+        }
+
+        response = requests.post(url, headers=headers, json=data)
+
+        if response.status_code == 200:
+            return Response({"detalle": "Mensaje enviado"}, status=status.HTTP_200_OK)
+        else:
+            return Response(response.json(), status=response.status_code)
     
 # class ReporteFacturaAPIView(APIView):
 #     def get(self, request):
