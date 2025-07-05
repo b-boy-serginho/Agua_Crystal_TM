@@ -7,8 +7,6 @@ class Cliente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     telefono = models.IntegerField()
     direccion = models.CharField(max_length=100)
-    # foto = models.CharField(max_length=300, null=True, blank=True)
-    # foto = models.ImageField(upload_to='clientes/')
     foto = models.ImageField(upload_to='clientes/', null=True, blank=True)
 
     def __str__(self):
@@ -18,14 +16,18 @@ class Ubicacion(models.Model):
     cliente = models.OneToOneField(Cliente, on_delete=models.CASCADE)
     longitud = models.FloatField()
     latitud = models.FloatField()
-    foto = models.CharField(max_length=300)  # ampliado
+    foto = models.ImageField(upload_to='ubicaciones/', null=True, blank=True)
+    # def __str__(self):
+    #      return self.foto.name if self.foto else "Sin foto"
     def __str__(self):
-        return self.foto
+        nombre = str(self.cliente.user.username)
+        foto_nombre = self.foto.name if self.foto else "sin_foto"
+        return f"{nombre} - {foto_nombre}"
 
 class Producto(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.CharField(max_length=500)
-    imagen = models.CharField(max_length=3000)
+    imagen = models.ImageField(upload_to='productos/', null=True, blank=True)
     def __str__(self):
         return self.nombre
     

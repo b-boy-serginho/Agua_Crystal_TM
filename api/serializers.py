@@ -14,6 +14,7 @@ class ClienteSerializer(serializers.ModelSerializer):
         ]
 
 class UbicacionSerializer(serializers.ModelSerializer):
+    foto = serializers.ImageField(required=False)
     class Meta:
         model = Ubicacion
         fields = [
@@ -25,6 +26,7 @@ class UbicacionSerializer(serializers.ModelSerializer):
         ]
 
 class ProductoSerializer(serializers.ModelSerializer):
+    imagen = serializers.ImageField(required=False)
     class Meta:
         model = Producto
         fields = [
@@ -50,7 +52,6 @@ class FacturaSerializer(serializers.ModelSerializer):
 class DetalleSerializer(serializers.ModelSerializer):
     factura = serializers.PrimaryKeyRelatedField(queryset=Factura.objects.filter(bloqueada=False))
     producto = serializers.PrimaryKeyRelatedField(queryset=Producto.objects.all())
-    # factura = serializers.PrimaryKeyRelatedField(queryset=Factura.objects.all())
     class Meta:
         model = Detalle
         # fields = '__all__'

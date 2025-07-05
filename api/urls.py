@@ -12,7 +12,6 @@ from .views import (
     ReporteFacturaAPIView, ResumenFacturasAPIView
 )
 
-
 router = routers.DefaultRouter()
 
 router.register('api/cliente', ClienteViewSet)
@@ -20,7 +19,6 @@ router.register('api/ubicacion', UbicacionViewSet)
 router.register('api/factura', FacturaViewSet)
 router.register('api/producto', ProductoViewSet)
 router.register('api/detalle', DetalleViewSet)
-
 
 urlpatterns = [
     path('', include(router.urls)),
