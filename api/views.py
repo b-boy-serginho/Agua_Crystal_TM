@@ -57,7 +57,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             data['email'] = user.email
             data['telefono'] = cliente.telefono
             data['direccion'] = cliente.direccion
-            data['foto'] = cliente.foto
+            data['foto'] = cliente.foto.url if cliente.foto else None
         except Cliente.DoesNotExist:
             data['user_id'] = user.id
             data['username'] = user.username
